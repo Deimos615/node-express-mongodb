@@ -1,10 +1,10 @@
 const express = require("express");
 const cors = require("cors");
-
+require('dotenv').config();
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:5000"
+  origin: "http://localhost:3000"
 };
 
 app.use(cors(corsOptions));
@@ -22,7 +22,7 @@ db.mongoose
     useUnifiedTopology: true
   })
   .then(() => {
-    console.log("Connected to the database!");
+    console.log("Connected to the database: '" + db.MONGO_DATABASE + "'!");
   })
   .catch(err => {
     console.log("Cannot connect to the database!", err);
@@ -34,7 +34,8 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to bezkoder application." });
 });
 
-require("./app/routes/turorial.routes")(app);
+require("./app/routes/auth.routes")(app);
+require("./app/routes/order.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
