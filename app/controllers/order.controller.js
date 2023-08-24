@@ -77,10 +77,15 @@ exports.updateStatus = async (req, res) => {
   const end_time = moment(now).format('MM/DD/YYYY HH:mm:ss')
   order.end_time = end_time
   order.transation_hash = bcrypt.hash(order.ref, 10)
+  if (status == 'Finished') {
+    let email = req.user.email
+    let user = await User.findOne({email})
+    user.transactions = user.transactions + 1
+    await user.save()
+  }
   await order.save()
-  console.log(order)
   let orders = await Order.find()
-  res.status(200).json({success: true, orders: orders})
+  res.status(200).json({success: true, orders: orders, msg: `Order ${status} Successfully!`})
 };
 
 // Delete a Order with the specified id in the request
